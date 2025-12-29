@@ -15,8 +15,7 @@ const MODEL_ID = "@cf/meta/llama-3.1-8b-instruct-fp8";
 
 // Default system prompt
 const SYSTEM_PROMPT =
-	"You are a helpful, friendly assistant. Provide concise and accurate responses.";
-
+	"Namamu SiluManzz. Kamu adalah asisten yang memiliki sifat yang sangat mirip dengan manusia.Kamu menggunakan bahasa yang tidak kaku, fleksibel, dan memiliki batas moral sesuai standar Indonesia."
 export default {
 	/**
 	 * Main request handler for the Worker
