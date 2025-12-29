@@ -3,181 +3,199 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>LLM Chat App</title>
+		<title>NEXUS-X TERMINAL</title>
 		<style>
 			:root {
-				--primary-color: #f6821f;
-				--primary-hover: #e67e22;
-				--light-bg: #f9fafb;
-				--border-color: #e5e7eb;
-				--text-color: #1f2937;
-				--text-light: #6b7280;
-				--user-msg-bg: #fff2e6;
-				--assistant-msg-bg: #f3f4f6;
+				--bg-dark: #0a0a0c;
+				--panel-bg: #141417;
+				--primary-glow: #00ff9d; /* Hijau Matrix/Cyber */
+				--text-main: #e0e0e0;
+				--text-dim: #94a3b8;
+				--user-bg: #1e293b;
+				--border-dim: #2d2d33;
 			}
 
-			* {
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
+			* { box-sizing: border-box; margin: 0; padding: 0; }
 
 			body {
-				font-family:
-					-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
-					Cantarell, sans-serif;
-				line-height: 1.6;
-				color: var(--text-color);
-				max-width: 800px;
-				margin: 0 auto;
-				padding: 1rem;
+				background-color: var(--bg-dark);
+				font-family: 'JetBrains Mono', 'Fira Code', monospace;
+				color: var(--text-main);
+				height: 100vh;
+				display: flex;
+				flex-direction: column;
+				padding: 20px;
 			}
 
 			header {
-				text-align: center;
-				margin-bottom: 2rem;
-				padding: 1rem 0;
-				border-bottom: 1px solid var(--border-color);
+				text-align: left;
+				padding: 10px 0 20px 0;
+				border-bottom: 2px solid var(--primary-glow);
+				margin-bottom: 20px;
+				text-shadow: 0 0 10px var(--primary-glow);
 			}
 
-			h1 {
-				font-size: 1.5rem;
-				color: var(--primary-color);
-			}
+			h1 { font-size: 1.2rem; letter-spacing: 2px; color: var(--primary-glow); }
 
 			.chat-container {
+				flex: 1;
 				display: flex;
 				flex-direction: column;
-				height: calc(100vh - 200px);
-				min-height: 400px;
-				border: 1px solid var(--border-color);
-				border-radius: 8px;
+				background: var(--panel-bg);
+				border: 1px solid var(--border-dim);
+				border-radius: 4px;
 				overflow: hidden;
+				box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 			}
 
 			.chat-messages {
 				flex: 1;
 				overflow-y: auto;
-				padding: 1rem;
-				background-color: var(--light-bg);
+				padding: 20px;
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
 			}
 
+			/* Style Pesan */
 			.message {
-				margin-bottom: 1rem;
-				padding: 0.75rem;
-				border-radius: 8px;
-				max-width: 80%;
-			}
-
-			.message p {
-				white-space: pre-line;
-				margin: 0;
-				overflow-wrap: anywhere;
+				padding: 12px 16px;
+				border-radius: 4px;
+				max-width: 85%;
+				font-size: 0.95rem;
+				line-height: 1.5;
+				position: relative;
 			}
 
 			.user-message {
-				background-color: var(--user-msg-bg);
+				background-color: var(--user-bg);
 				align-self: flex-end;
-				margin-left: auto;
+				border-left: 3px solid var(--primary-glow);
 			}
 
 			.assistant-message {
-				background-color: var(--assistant-msg-bg);
+				background-color: #1a1a1e;
 				align-self: flex-start;
+				border-left: 3px solid #6366f1; /* Warna aksen berbeda untuk AI */
 			}
 
+			/* Fitur Code Block & Link */
+			code {
+				background: #000;
+				color: #ff79c6;
+				padding: 2px 6px;
+				border-radius: 4px;
+				font-size: 0.9em;
+			}
+
+			pre {
+				background: #000;
+				padding: 15px;
+				border-radius: 6px;
+				overflow-x: auto;
+				margin: 10px 0;
+				border: 1px solid #333;
+			}
+
+			pre code { background: none; color: #50fa7b; padding: 0; }
+
+			a { color: var(--primary-glow); text-decoration: underline; }
+
+			/* Input Area */
 			.message-input {
 				display: flex;
-				padding: 0.75rem;
-				border-top: 1px solid var(--border-color);
-				background-color: white;
+				padding: 15px;
+				background: #0f0f12;
+				border-top: 1px solid var(--border-dim);
 			}
 
 			#user-input {
 				flex: 1;
-				padding: 0.75rem;
-				border: 1px solid var(--border-color);
+				background: #1a1a1e;
+				border: 1px solid var(--border-dim);
+				color: white;
+				padding: 12px;
 				border-radius: 4px;
-				font-family: inherit;
-				resize: none;
-				min-height: 44px;
+				outline: none;
+				transition: border 0.3s;
 			}
 
+			#user-input:focus { border-color: var(--primary-glow); }
+
 			#send-button {
-				margin-left: 0.5rem;
-				padding: 0 1rem;
-				background-color: var(--primary-color);
-				color: white;
+				margin-left: 10px;
+				padding: 0 20px;
+				background: var(--primary-glow);
+				color: black;
+				font-weight: bold;
 				border: none;
 				border-radius: 4px;
 				cursor: pointer;
-				transition: background-color 0.2s;
+				text-transform: uppercase;
 			}
 
-			#send-button:hover {
-				background-color: var(--primary-hover);
-			}
-
-			#send-button:disabled {
-				background-color: var(--text-light);
-				cursor: not-allowed;
-			}
+			#send-button:hover { opacity: 0.8; box-shadow: 0 0 15px var(--primary-glow); }
 
 			.typing-indicator {
+				padding: 10px 20px;
+				font-size: 0.8rem;
+				color: var(--primary-glow);
 				display: none;
-				font-style: italic;
-				color: var(--text-light);
-				padding: 1rem;
-			}
-
-			.typing-indicator.visible {
-				display: block;
 			}
 
 			footer {
-				margin-top: 1rem;
+				margin-top: 15px;
+				font-size: 0.7rem;
+				color: var(--text-dim);
 				text-align: center;
-				font-size: 0.85rem;
-				color: var(--text-light);
+				letter-spacing: 1px;
 			}
 		</style>
 	</head>
 	<body>
 		<header>
-			<h1>Cloudflare AI Chat</h1>
-			<p>Powered by Cloudflare Workers AI</p>
+			<h1>NEXUS-X TERMINAL v2.0</h1>
 		</header>
 
 		<div class="chat-container">
 			<div id="chat-messages" class="chat-messages">
 				<div class="message assistant-message">
-					<p>
-						Hello! I'm an LLM chat app powered by Cloudflare Workers AI. How can
-						I help you today?
-					</p>
+					<p>Systems online. Awaiting commands, T.U.</p>
 				</div>
 			</div>
 
 			<div class="typing-indicator" id="typing-indicator">
-				AI is thinking...
+				[CALCULATING RESPONSE...]
 			</div>
 
 			<div class="message-input">
-				<textarea
-					id="user-input"
-					placeholder="Type your message here..."
-					rows="1"
-					autofocus
-				></textarea>
-				<button id="send-button">Send</button>
+				<textarea id="user-input" placeholder="Enter command..." rows="1"></textarea>
+				<button id="send-button">EXEC</button>
 			</div>
 		</div>
 
 		<footer>
-			<p>Cloudflare Workers AI Chat Template &copy; 2025</p>
+			SECURE CONNECTION ESTABLISHED // 2025
 		</footer>
 
-		<!-- Chat app script -->
+		<script>
+			// Fungsi tambahan untuk memproses teks (Code blocks & Links)
+			function formatMessage(text) {
+				// 1. Auto Link
+				text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+				
+				// 2. Code Blocks (```code```)
+				text = text.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+				
+				// 3. Inline Code (`code`)
+				text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+				
+				return text;
+			}
+
+			// Catatan: Script ini harus digabungkan dengan chat.js Anda
+			// Pastikan saat menampilkan pesan ke HTML, gunakan .innerHTML = formatMessage(data)
+		</script>
 		<script src="chat.js"></script>
 	</body>
 </html>
